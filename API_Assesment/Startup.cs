@@ -39,6 +39,7 @@ namespace API_Assesment
 
             services.AddScoped<IConverterService,ConverterService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IRoleTypeService,RoleTypeServices>();
             services.AddScoped<IStatusService,StatusServices>();
 

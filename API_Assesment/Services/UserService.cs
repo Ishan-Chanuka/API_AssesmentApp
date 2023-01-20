@@ -21,17 +21,15 @@ namespace API_Assesment.Services
     public class UserService : RepositoryServices<UserDetails>, IUserService
     {
         #region Constructor
-        public UserService(ApplicationDbContext Db, IConfiguration Configuration) : base(Db)
+        public UserService(ApplicationDbContext Db) : base(Db)
         {
             _db = Db;
-            _secretKey = Configuration.GetValue<string>("ApiSettings:SecretKey");
         }
         #endregion
 
         #region Private variables
 
         private readonly ApplicationDbContext _db;
-        private string _secretKey;
 
         #endregion
 
@@ -76,45 +74,6 @@ namespace API_Assesment.Services
                 return true;
             else
                 return false;
-        }
-
-        public async Task<LoginResponseModel> Login(LoginRequestModel entity)
-        {
-            var user = _db.UserDetails.FirstOrDefault(u => u.Email == entity.Email && u.Password == entity.Password);
-
-            if (user == null)
-            {
-                return new LoginResponseModel()
-                {
-                    Token = "",
-                    Email = null
-                };
-            }
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secretKey);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Email, user.Email)
-                }),
-
-                Expires = DateTime.UtcNow.AddDays(7),
-
-                SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            LoginResponseModel response = new LoginResponseModel()
-            {
-                Token = tokenHandler.WriteToken(token),
-                Email = user.Email
-            };
-
-            return response;
         }
     }
 }

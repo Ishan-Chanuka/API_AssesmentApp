@@ -13,7 +13,6 @@ namespace API_Assesment.Services.Interfaces
     {
         Task<UserDetails> Update(UserDetails entity);
         Task<FullUserDetailsResponseModel> GetByEmail(string filter);
-        Task<LoginResponseModel> Login(LoginRequestModel entity);
         bool EmailValidation(string email);
     }
 }
