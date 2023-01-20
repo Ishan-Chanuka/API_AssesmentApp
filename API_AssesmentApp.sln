@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.33130.400
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API_Assesment", "API_Assesment\API_Assesment.csproj", "{BE934CF6-D90C-4997-96A5-77FC3105DF97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API_Assesment", "API_Assesment\API_Assesment.csproj", "{BE934CF6-D90C-4997-96A5-77FC3105DF97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationsLibrary", "ValidationsLibrary\ValidationsLibrary.csproj", "{A75BFADC-DA8F-4FA6-AFEC-3750D86365B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{BE934CF6-D90C-4997-96A5-77FC3105DF97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE934CF6-D90C-4997-96A5-77FC3105DF97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE934CF6-D90C-4997-96A5-77FC3105DF97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A75BFADC-DA8F-4FA6-AFEC-3750D86365B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A75BFADC-DA8F-4FA6-AFEC-3750D86365B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A75BFADC-DA8F-4FA6-AFEC-3750D86365B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A75BFADC-DA8F-4FA6-AFEC-3750D86365B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

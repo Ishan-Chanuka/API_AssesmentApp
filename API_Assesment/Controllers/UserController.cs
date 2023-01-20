@@ -33,34 +33,7 @@ namespace API_Assesment.Controllers
 
         #endregion
 
-        [HttpPost]
-        [Route("Login")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Login([FromBody] LoginRequestModel entity)
-        {
-            if (_userService.EmailValidation(entity.Email) == false)
-                return BadRequest();
-            else
-            {
-                string encryptedPass = _converterService.PasswordEncription(entity.Password);
-                var request = new LoginRequestModel
-                {
-                    Email = entity.Email,
-                    Password = encryptedPass
-                };
 
-                var response = await _userService.Login(request);
-
-                if (response.Email == null || string.IsNullOrEmpty(response.Token))
-                {
-                    return BadRequest(new { message = "Email or Password is incorrect" });
-                }
-
-                return Ok(response);
-            }
-        }
 
         [HttpGet]
         [Authorize]
