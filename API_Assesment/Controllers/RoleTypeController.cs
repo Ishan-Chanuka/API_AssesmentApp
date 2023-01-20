@@ -36,6 +36,7 @@ namespace API_Assesment.Controllers
         [Route("GetAllRoleTypes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IEnumerable<RoleTypeResponseModel>>> GetAllUsers()
         {
             IEnumerable<RoleType> roles = await _roleTypeService.GetAll();
@@ -48,6 +49,7 @@ namespace API_Assesment.Controllers
         [Route("AddRole")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateRoleTypeRequestModel>> AddUsers([FromBody] CreateRoleTypeRequestModel entity)
         {
@@ -63,6 +65,7 @@ namespace API_Assesment.Controllers
         [Route("UpdateRole")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateUser(int Id, [FromBody] UpdateRoleTypeRequestModel entity)
         {
             RoleType request =  _converterService.UpdateRoleTypeReqIntoRole(entity);
@@ -76,8 +79,9 @@ namespace API_Assesment.Controllers
         [HttpDelete]
         [Route("DeleteRole")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(int Id)
         {
             var entity = await _roleTypeService.GetById(l => l.RoleID == Id);

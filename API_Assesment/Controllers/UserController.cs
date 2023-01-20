@@ -39,6 +39,7 @@ namespace API_Assesment.Controllers
         [Authorize]
         [Route("GetAllUsers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<UserDetailsResponseModel>>> GetAllUsers()
         {
@@ -53,6 +54,7 @@ namespace API_Assesment.Controllers
         [Route("GetUserByEmail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<FullUserDetailsResponseModel>>> GetUserByEmail(string email)
         {
@@ -71,6 +73,7 @@ namespace API_Assesment.Controllers
         [Route("AddUsers")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateUserDetailsRequestModel>> AddUsers([FromBody] CreateUserDetailsRequestModel entity) 
         {
@@ -92,6 +95,7 @@ namespace API_Assesment.Controllers
         [Route("UpdateUser")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateUser(int Id, [FromBody] UpdateUserDetailsRequestModel entity)
         {
             if (_userService.EmailValidation(entity.Email) == false)
@@ -111,8 +115,9 @@ namespace API_Assesment.Controllers
         [Authorize]
         [Route("DeleteUser")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(int Id)
         {
             var entity = await _userService.GetById(l => l.UserID == Id);
