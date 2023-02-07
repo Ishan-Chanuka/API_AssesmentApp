@@ -40,7 +40,7 @@ namespace API_Assesment.Controllers
         public IActionResult Login([FromBody] LoginRequestModel entity)
         {
             if (EmailValidator.EmailValidation(entity.Email) == false)
-                return BadRequest();
+                return BadRequest(new { message = "Email or Password is incorrect" });
             else
             {
                 string encryptedPass = _converterService.PasswordEncription(entity.Password);
