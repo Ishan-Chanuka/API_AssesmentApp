@@ -35,6 +35,7 @@ namespace API_Assesment.Controllers
         [HttpGet]
         [Route("GetAllStatus")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<StatusResponseModel>>> GetAllUsers()
         {
@@ -48,6 +49,7 @@ namespace API_Assesment.Controllers
         [Route("AddStatus")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateStatusRequestModel>> AddUsers([FromBody] CreateStatusRequestModel entity)
         {
@@ -63,6 +65,7 @@ namespace API_Assesment.Controllers
         [Route("UpdateStatus")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateUser(int Id, [FromBody] UpdateStatusRequestModel entity)
         {
             Status request = _converterService.UpdateStatusReqIntoStatus(entity);
@@ -76,8 +79,9 @@ namespace API_Assesment.Controllers
         [HttpDelete]
         [Route("DeleteStatus")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(int Id)
         {
             var entity = await _statusService.GetById(l => l.StatusID == Id);

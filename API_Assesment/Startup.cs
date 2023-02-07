@@ -39,6 +39,7 @@ namespace API_Assesment
 
             services.AddScoped<IConverterService,ConverterService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IRoleTypeService,RoleTypeServices>();
             services.AddScoped<IStatusService,StatusServices>();
 
@@ -66,6 +67,13 @@ namespace API_Assesment
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API_Assesment", Version = "v1" });
             });
+
+            // temp cros platform error
+
+            services.AddCors(options => options.AddPolicy(name: "Origin", policy =>
+            {
+                policy.WithOrigins("http://localhost:4200/").AllowAnyMethod().AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,6 +85,8 @@ namespace API_Assesment
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API_Assesment v1"));
             }
+
+            app.UseCors("Origin");
 
             app.UseHttpsRedirection();
 

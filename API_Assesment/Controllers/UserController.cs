@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ValidationsLibrary;
 
 namespace API_Assesment.Controllers
 {
@@ -33,39 +34,12 @@ namespace API_Assesment.Controllers
 
         #endregion
 
-        [HttpPost]
-        [Route("Login")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Login([FromBody] LoginRequestModel entity)
-        {
-            if (_userService.EmailValidation(entity.Email) == false)
-                return BadRequest();
-            else
-            {
-                string encryptedPass = _converterService.PasswordEncription(entity.Password);
-                var request = new LoginRequestModel
-                {
-                    Email = entity.Email,
-                    Password = encryptedPass
-                };
 
-                var response = await _userService.Login(request);
-
-                if (response.Email == null || string.IsNullOrEmpty(response.Token))
-                {
-                    return BadRequest(new { message = "Email or Password is incorrect" });
-                }
-
-                return Ok(response);
-            }
-        }
 
         [HttpGet]
-        [Authorize]
         [Route("GetAllUsers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<UserDetailsResponseModel>>> GetAllUsers()
         {
@@ -80,10 +54,11 @@ namespace API_Assesment.Controllers
         [Route("GetUserByEmail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<FullUserDetailsResponseModel>>> GetUserByEmail(string email)
         {
-            if (_userService.EmailValidation(email) == false)
+            if (EmailValidator.EmailValidation(email) == false)
                 return BadRequest();
             else
             {
@@ -98,10 +73,11 @@ namespace API_Assesment.Controllers
         [Route("AddUsers")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateUserDetailsRequestModel>> AddUsers([FromBody] CreateUserDetailsRequestModel entity) 
         {
-            if (_userService.EmailValidation(entity.Email) == false)
+            if (EmailValidator.EmailValidation(entity.Email) == false)
                 return BadRequest();
             else
             {
@@ -119,9 +95,10 @@ namespace API_Assesment.Controllers
         [Route("UpdateUser")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateUser(int Id, [FromBody] UpdateUserDetailsRequestModel entity)
         {
-            if (_userService.EmailValidation(entity.Email) == false)
+            if (EmailValidator.EmailValidation(entity.Email) == false)
                 return BadRequest();
             else
             {
@@ -138,17 +115,27 @@ namespace API_Assesment.Controllers
         [Authorize]
         [Route("DeleteUser")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(int Id)
         {
-            var entity = await _userService.GetById(l => l.UserID == Id);
-            await _userService.Remove(entity);
+            if (Id.ToString() == null || Id == 0)
+                return BadRequest();
+            else
+            {
+                var entity = await _userService.GetById(l => l.UserID == Id);
 
-            IEnumerable<UserDetails> users = await _userService.GetAll();
-            IEnumerable<UserDetailsResponseModel> response = _converterService.UsersIntoResponse(users);
+                if (entity == null)
+                    return NotFound("Requested record does not exist");
 
-            return Ok(response);
+                await _userService.Remove(entity);
+
+                IEnumerable<UserDetails> users = await _userService.GetAll();
+                IEnumerable<UserDetailsResponseModel> response = _converterService.UsersIntoResponse(users);
+
+                return Ok(response);
+            }
         }
     }
 }
