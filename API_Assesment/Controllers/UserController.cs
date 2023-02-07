@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ValidationsLibrary;
 
 namespace API_Assesment.Controllers
 {
@@ -36,7 +37,6 @@ namespace API_Assesment.Controllers
 
 
         [HttpGet]
-        [Authorize]
         [Route("GetAllUsers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -58,7 +58,7 @@ namespace API_Assesment.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<FullUserDetailsResponseModel>>> GetUserByEmail(string email)
         {
-            if (_userService.EmailValidation(email) == false)
+            if (EmailValidator.EmailValidation(email) == false)
                 return BadRequest();
             else
             {
@@ -77,7 +77,7 @@ namespace API_Assesment.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateUserDetailsRequestModel>> AddUsers([FromBody] CreateUserDetailsRequestModel entity) 
         {
-            if (_userService.EmailValidation(entity.Email) == false)
+            if (EmailValidator.EmailValidation(entity.Email) == false)
                 return BadRequest();
             else
             {
@@ -98,7 +98,7 @@ namespace API_Assesment.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateUser(int Id, [FromBody] UpdateUserDetailsRequestModel entity)
         {
-            if (_userService.EmailValidation(entity.Email) == false)
+            if (EmailValidator.EmailValidation(entity.Email) == false)
                 return BadRequest();
             else
             {
@@ -120,13 +120,22 @@ namespace API_Assesment.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(int Id)
         {
-            var entity = await _userService.GetById(l => l.UserID == Id);
-            await _userService.Remove(entity);
+            if (Id.ToString() == null || Id == 0)
+                return BadRequest();
+            else
+            {
+                var entity = await _userService.GetById(l => l.UserID == Id);
 
-            IEnumerable<UserDetails> users = await _userService.GetAll();
-            IEnumerable<UserDetailsResponseModel> response = _converterService.UsersIntoResponse(users);
+                if (entity == null)
+                    return NotFound("Requested record does not exist");
 
-            return Ok(response);
+                await _userService.Remove(entity);
+
+                IEnumerable<UserDetails> users = await _userService.GetAll();
+                IEnumerable<UserDetailsResponseModel> response = _converterService.UsersIntoResponse(users);
+
+                return Ok(response);
+            }
         }
     }
 }

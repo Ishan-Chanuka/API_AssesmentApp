@@ -19,22 +19,32 @@ namespace API_Assesment.Services
         public IEnumerable<UserDetailsResponseModel> UsersIntoResponse(IEnumerable<UserDetails> entity)
         {
             var response = new List<UserDetailsResponseModel>();
+            var errors = new List<string>();
 
             foreach (var item in entity)
             {
-                response.Add(new UserDetailsResponseModel
+
+                try
                 {
-                    UserID = item.UserID.ToString(),
-                    FirstName = item.FirstName,
-                    LastName = item.LastName,
-                    Email = item.Email,
-                    Password = item.Password,
-                    DateofBirth = item.DateofBirth,
-                    RoleType = item.RoleType.ToString(),
-                    Status = item.Status.ToString(),
-                    CreatedAt = item.CreatedAt.ToString(),
-                    ModifiedAt = item.ModifiedAt.ToString()
-                });
+                    response.Add(new UserDetailsResponseModel
+                    {
+                        UserID = item.UserID.ToString(),
+                        FirstName = item.FirstName,
+                        LastName = item.LastName,
+                        Email = item.Email,
+                        Password = item.Password,
+                        DateofBirth = item.DateofBirth,
+                        RoleType = item.RoleType.ToString(),
+                        Status = item.Status.ToString(),
+                        CreatedAt = item.CreatedAt.ToString(),
+                        ModifiedAt = item.ModifiedAt.ToString()
+                    });
+                }
+                catch (Exception ex)
+                {
+                    errors.Add($"Error:{ex.Message}");
+                }
+
             }
 
             return response;
@@ -43,16 +53,24 @@ namespace API_Assesment.Services
         public UserDetails CreateUserReqIntoUser(CreateUserDetailsRequestModel entity)
         {
             UserDetails response = new UserDetails();
+            var errors = new List<string>();
 
-            response.FirstName = entity.FirstName;
-            response.LastName = entity.LastName;
-            response.Email = entity.Email;
-            response.Password = PasswordEncription(entity.Password);
-            response.DateofBirth = entity.DateofBirth;
-            response.RoleType = int.Parse(entity.RoleType);
-            response.Status = int.Parse(entity.Status);
-            response.CreatedAt = DateTime.Now;
-            response.ModifiedAt = DateTime.Now;
+            try
+            {
+                response.FirstName = entity.FirstName;
+                response.LastName = entity.LastName;
+                response.Email = entity.Email;
+                response.Password = PasswordEncription(entity.Password);
+                response.DateofBirth = entity.DateofBirth;
+                response.RoleType = int.Parse(entity.RoleType);
+                response.Status = int.Parse(entity.Status);
+                response.CreatedAt = DateTime.Now;
+                response.ModifiedAt = DateTime.Now;
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"Error:{ex.Message}");
+            }
 
             return response;
         }
@@ -60,16 +78,26 @@ namespace API_Assesment.Services
         public UserDetails UpdateUserReqIntoUser(UpdateUserDetailsRequestModel entity)
         {
             UserDetails response = new UserDetails();
+            var errors = new List<string>();
 
-            response.UserID = int.Parse(entity.UserID);
-            response.FirstName = entity.FirstName;
-            response.LastName = entity.LastName;
-            response.Email = entity.Email;
-            response.Password = entity.Password;
-            response.DateofBirth = entity.DateofBirth;
-            response.RoleType = int.Parse(entity.RoleType);
-            response.Status = int.Parse(entity.Status);
-            response.ModifiedAt = DateTime.Now;
+            try
+            {
+                response.UserID = int.Parse(entity.UserID);
+                response.FirstName = entity.FirstName;
+                response.LastName = entity.LastName;
+                response.Email = entity.Email;
+                response.Password = entity.Password;
+                response.DateofBirth = entity.DateofBirth;
+                response.RoleType = int.Parse(entity.RoleType);
+                response.Status = int.Parse(entity.Status);
+                response.ModifiedAt = DateTime.Now;
+
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"Error:{ex.Message}");
+            }
+
 
             return response;
         }
@@ -92,17 +120,26 @@ namespace API_Assesment.Services
         public IEnumerable<RoleTypeResponseModel> RoleTypeIntoResponse(IEnumerable<RoleType> entity)
         {
             var response = new List<RoleTypeResponseModel>();
+            var errors = new List<string>();
 
             foreach (var item in entity)
             {
-                response.Add(new RoleTypeResponseModel
+                try
                 {
-                    RoleID = item.RoleID.ToString(),
-                    RoleName = item.RoleName,
-                    Status = item.Status.ToString(),
-                    CreatedAt = item.CreatedAt.ToString(),
-                    ModifiedAt = item.ModifiedAt.ToString()
-                });
+                    response.Add(new RoleTypeResponseModel
+                    {
+                        RoleID = item.RoleID.ToString(),
+                        RoleName = item.RoleName,
+                        Status = item.Status.ToString(),
+                        CreatedAt = item.CreatedAt.ToString(),
+                        ModifiedAt = item.ModifiedAt.ToString()
+                    });
+
+                }
+                catch (Exception ex)
+                {
+                    errors.Add($"Error:{ex.Message}");
+                }
             }
 
             return response;
@@ -111,11 +148,20 @@ namespace API_Assesment.Services
         public RoleType CreateRoleReqTypeIntoRole(CreateRoleTypeRequestModel entity)
         {
             RoleType response = new RoleType();
+            var errors = new List<string>();
 
-            response.RoleName = entity.RoleName;
-            response.Status = int.Parse(entity.Status);
-            response.CreatedAt = DateTime.Now;
-            response.ModifiedAt = DateTime.Now;
+            try
+            {
+                response.RoleName = entity.RoleName;
+                response.Status = int.Parse(entity.Status);
+                response.CreatedAt = DateTime.Now;
+                response.ModifiedAt = DateTime.Now;
+
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"Error: {ex.Message}");
+            }
 
             return response;
         }
@@ -123,11 +169,20 @@ namespace API_Assesment.Services
         public RoleType UpdateRoleTypeReqIntoRole(UpdateRoleTypeRequestModel entity)
         {
             RoleType response = new RoleType();
+            var errors = new List<string>();
 
-            response.RoleID = int.Parse(entity.RoleID);
-            response.RoleName = entity.RoleName;
-            response.Status = int.Parse(entity.Status);
-            response.ModifiedAt = DateTime.Now;
+            try
+            {
+                response.RoleID = int.Parse(entity.RoleID);
+                response.RoleName = entity.RoleName;
+                response.Status = int.Parse(entity.Status);
+                response.ModifiedAt = DateTime.Now;
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"Error: {ex.Message}");
+            }
+            
 
             return response;
         }
@@ -137,16 +192,24 @@ namespace API_Assesment.Services
         public IEnumerable<StatusResponseModel> StatusReqIntoResponse(IEnumerable<Status> entity)
         {
             var response = new List<StatusResponseModel>();
+            var errors = new List<string>();
 
             foreach (var item in entity)
             {
-                response.Add(new StatusResponseModel
+                try
                 {
-                    StatusID = item.StatusID.ToString(),
-                    StatusName = item.StatusName,
-                    CreatedAt = item.CreatedAt.ToString(),
-                    ModifiedAt = item.ModifiedAt.ToString()
-                });
+                    response.Add(new StatusResponseModel
+                    {
+                        StatusID = item.StatusID.ToString(),
+                        StatusName = item.StatusName,
+                        CreatedAt = item.CreatedAt.ToString(),
+                        ModifiedAt = item.ModifiedAt.ToString()
+                    });
+                }
+                catch(Exception ex)
+                {
+                    errors.Add($"Error: {ex.Message}");
+                }
             }
 
             return response;
@@ -155,10 +218,18 @@ namespace API_Assesment.Services
         public Status CreateStatusReqIntoStatus(CreateStatusRequestModel entity)
         {
             Status response = new Status();
+            var errors = new List<string>();
 
-            response.StatusName = entity.StatusName;
-            response.CreatedAt = DateTime.Now;
-            response.ModifiedAt = DateTime.Now;
+            try
+            {
+                response.StatusName = entity.StatusName;
+                response.CreatedAt = DateTime.Now;
+                response.ModifiedAt = DateTime.Now;
+            }
+            catch(Exception ex)
+            {
+                errors.Add($"Error: {ex.Message}");
+            }
 
             return response;
         }
@@ -166,10 +237,18 @@ namespace API_Assesment.Services
         public Status UpdateStatusReqIntoStatus(UpdateStatusRequestModel entity)
         {
             Status response = new Status();
+            var errors = new List<string>();
 
-            response.StatusID = int.Parse(entity.StatusID);
-            response.StatusName = entity.StatusName;
-            response.ModifiedAt = DateTime.Now;
+            try
+            {
+                response.StatusID = int.Parse(entity.StatusID);
+                response.StatusName = entity.StatusName;
+                response.ModifiedAt = DateTime.Now;
+            }
+            catch(Exception ex)
+            {
+                errors.Add($"Error: {ex.Message}");
+            }
 
             return response;
         }
